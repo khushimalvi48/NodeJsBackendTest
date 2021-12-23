@@ -39,19 +39,6 @@ app.get('/registerEmp', async(req, res) => {
 
 
 //Post requests
-const incrementNoOfEmpl = async(req)=>{
-    try {
-        const cname = await Company.find({ "name": { $eq: req.body.company_name } });
-        const name = cname[0].name;
-        const res = await Company.updateOne({ "name": { $eq: name } },
-        { $inc: { number_of_empl: 1 } });
-        //console.log(res);
-        
-    } catch (error) {
-        console.log(error)
-    }
-}
-
 app.post("/registerEmp", async (req, res) => {
     try {
         const registerEmployee = new Employee({
@@ -61,12 +48,18 @@ app.post("/registerEmp", async (req, res) => {
             phone: req.body.phone,
             company_name: req.body.company_name
         })
+        const cname = await Company.findOne({ name: registerEmployee.companyName });
+        if(cname){
+            const name = cname[0].name;
+            const res = await Company.updateOne({ "name": { $eq: name } },
+            { $inc: { number_of_empl: 1 } });
+        }
         const data = await registerEmployee.save();
         console.log(data);
         res.send(data);
-        incrementNoOfEmpl(req);
     } catch (e) {
         res.status(400).send(e);
+        res.send("enter valid company");
     }
 });
 

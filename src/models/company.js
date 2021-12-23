@@ -7,7 +7,8 @@ const companySchema = new mongoose.Schema({
         unique: true
     },
     number_of_empl: {
-        type: Number
+        type: Number,
+        default:0
     }
 })
 
