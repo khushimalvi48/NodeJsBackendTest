@@ -48,7 +48,7 @@ app.post("/registerEmp", async (req, res) => {
             phone: req.body.phone,
             company_name: req.body.company_name
         })
-        const cname = await Company.findOne({ name: registerEmployee.companyName });
+        const cname = await Company.findOne({ "name" : registerEmployee.company_name });
         if(cname){
             const name = cname[0].name;
             const res = await Company.updateOne({ "name": { $eq: name } },
@@ -76,8 +76,6 @@ app.post("/registerComp", async (req, res) => {
         res.status(400).send(e);
     }
 });
-
-
 
 app.listen(port, () => {
     console.log(`server started at port ${port}`)
